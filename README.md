@@ -1,6 +1,6 @@
 # RabbitRunner
 
-SCRIPTS
+**SCRIPTS**
 
 - MÉTODO Jump() del script PlayerController
 
@@ -17,7 +17,7 @@ Empezamos creando un script para el movimiento del jugador (PlayerController), e
     
          --> myRigidBody2d.AddForce(Vector2.up * forceJump, ForceMode2D.Impulse);
          
-         * A la física del personaje se le ejerce una fuerza vertical hacia arriba, multiplicado por la fuerza del salto, ejerciendo un impulso con su masa.
+         * A la física del personaje se le ejerce una fuerza vertical hacia arriba, multiplicado por la fuerza del salto, ejerciendo un impulso con su masa.*
 
     · En el método Update(), colocaremos que si se pulsa el boton que nosotros queramos, se llamará a la función Jump(), 
       para que el personaje salte por cada frame por segundo.
