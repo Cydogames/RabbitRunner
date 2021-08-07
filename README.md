@@ -2,6 +2,8 @@
 
 SCRIPTS
 
+- MÉTODO Jump() del script PlayerController
+
 Empezamos creando un script para el movimiento del jugador (PlayerController), en el cual se va a definir, para comenzar, el salto del personaje:
 
     · Crear una variable pública de tipo float para la fuerza del salto y otra variable privada de tipo Rigidbody2D, 
@@ -19,7 +21,9 @@ Empezamos creando un script para el movimiento del jugador (PlayerController), e
 
     · En el método Update(), colocaremos que si se pulsa el boton que nosotros queramos, se llamará a la función Jump(), 
       para que el personaje salte por cada frame por segundo.
-     
+    
+ - MÉTODO isGrounded() del script PlayerController
+    
 Con este código implementado ya deberia saltar nuestro personaje, añadiendo el script al GameObject del personaje como un componente del inspector. Sin embargo, solo nos interesará saltar cuando estemos en el suelo. Por lo que habrá que programar esta función:
 
     · Antes de nada, es conveniente crear una variable publica de tipo LayerMask para poder acceder a la capa Ground, 
