@@ -4,15 +4,58 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float jumpForce = 30.0f;
+
+    public LayerMask groundLayerMask;
+    private Rigidbody2D myRigidbody2d;
+    public Animator myAnimator;
+
+    //-------------------------------------------------------------//
+
+    void Awake()
+    {
+        myRigidbody2d = GetComponent<Rigidbody2D>();
+        myAnimator.SetBool("isAlive", true);
+    }
+
     void Start()
+    {
+        myAnimator.SetBool("isAlive", true);
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Jump();
+        }
+
+        myAnimator.SetBool("isGrounded", isGrounded());
+    }
+
+    void FixedUpdate()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    //------------------------------------------------------------//
+
+    void Jump()
     {
+        if (isGrounded())
+        {
+            myRigidbody2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            
+        }
         
     }
+
+    bool isGrounded()
+    {
+        if (Physics2D.Raycast(this.transform.position, Vector2.down, 1.0f, groundLayerMask.value)){
+            return true;
+
+        } else return false;
+    }
+
 }
