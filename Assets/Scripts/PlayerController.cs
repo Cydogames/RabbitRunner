@@ -29,21 +29,41 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (GameManager.sharedInstance.currentGameState == GameState.inGameStarted)
         {
-            Jump();
+            if (Input.GetMouseButtonDown(0))
+            {
+                Jump();
+            }
         }
 
         myAnimator.SetBool("isGrounded", IsGrounded());
     }
 
+
     private void FixedUpdate()
     {
-
-        if (myRigidbody2d.velocity.x < runningSpeed)
+        if (GameManager.sharedInstance.currentGameState == GameState.inGameStarted)
         {
-            myRigidbody2d.velocity = new Vector2(runningSpeed, myRigidbody2d.velocity.y);
+            myAnimator.SetBool("isAlive", true);
+
+            if (myRigidbody2d.velocity.x < runningSpeed)
+            {
+                myRigidbody2d.velocity = new Vector2(runningSpeed, myRigidbody2d.velocity.y);
+            }
+        } 
+        else if (GameManager.sharedInstance.currentGameState == GameState.inGamePaused)
+        {
+            myRigidbody2d.velocity = new Vector2(0,0);
         }
+
+        else if (GameManager.sharedInstance.currentGameState == GameState.inGameOver)
+        {
+            myRigidbody2d.velocity = new Vector2(0, 0);
+            myRigidbody2d.gravityScale = 9.8f;
+            IsDead();
+        }
+
 
     }
 
@@ -73,6 +93,7 @@ public class PlayerController : MonoBehaviour
     public void IsDead()
     {
         myAnimator.SetBool("isAlive", false);
+        GameManager.sharedInstance.currentGameState = GameState.inGameOver;
     }
 
 }
