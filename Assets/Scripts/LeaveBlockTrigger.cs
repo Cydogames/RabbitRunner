@@ -14,5 +14,7 @@ public class LeaveBlockTrigger : MonoBehaviour
         //Una vez que cualquier objeto se encuentre con el trigger, eliminar los bloques antiguos
         LevelGenerator.sharedInstance.RemoveOldBlock();
 
+        FakeBlock.sharedInstance.fakeBlock.SetActive(false);
+
     }
 }

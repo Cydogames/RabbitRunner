@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     //Variable que hacer referencia al componente de animación del objeto
     public Animator myAnimator;
 
+    private string playerMaxScore = "maxscore";
+
     //-------------------------------------------------------------//
 
     //Método en el que se preparan algunas opciones antes de empezar el juego
@@ -42,7 +44,7 @@ public class PlayerController : MonoBehaviour
         myAnimator.SetBool("isAlive", true);
     }
 
-    private void Start()
+    public void Start()
     {
         myAnimator.SetBool("isAlive", true);
         RestartPosition();
@@ -52,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.sharedInstance.currentGameState == GameState.inGameStarted)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 Jump();
             }
@@ -64,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GameManager.sharedInstance.currentGameState == GameState.inGameStarted)
+        if (GameManager.sharedInstance.currentGameState == GameState.inGameStarted && GameManager.sharedInstance.currentGameState != GameState.inMenu)
         {
             myAnimator.SetBool("isAlive", true);
 
@@ -132,6 +134,19 @@ public class PlayerController : MonoBehaviour
 
         //Accediendo a la clase GameManager, mediante su instancia compartida, llamamos al método que hace que la partida termine.
         GameManager.sharedInstance.GameOver();
+
+        if (PlayerPrefs.GetFloat(playerMaxScore, 0) < this.RunningDistance())
+        {
+            PlayerPrefs.SetFloat(playerMaxScore, this.RunningDistance());
+        }
     }
+
+    //Método para calcular la distancia que el personaje está recorriendo
+    public float RunningDistance()
+    {
+        float distanceTravelled = Vector2.Distance(new Vector2(startPosition.x, 0), new Vector2(this.transform.position.x, 0));
+        return distanceTravelled;
+    }
+
 
 }

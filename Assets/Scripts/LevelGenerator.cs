@@ -17,8 +17,9 @@ public class LevelGenerator : MonoBehaviour
     public List<LevelBlock> currentLevelBlocks = new List<LevelBlock>();
 
     //Punto inicial donde empezará a crearse el primer nivel de todos
-    public Transform levelInitialPoint; 
+    public Transform levelInitialPoint;
 
+    private bool isGeneratingInitialBlocks = false;
 
     //----------------------METODOS DE UNITY---------------------------//
 
@@ -28,8 +29,12 @@ public class LevelGenerator : MonoBehaviour
         //La instancia compartida hace referencia a la propia clase "LevelGenerator" mediante la palabra reservada "this"
         sharedInstance = this;
 
-        //Se añade un nuevo bloque (Consultar el método definido mas abajo)
-        AddNewBlock(); 
+        //Se añade dos nuevos bloques (Consultar el método definido mas abajo)
+        for (int i = 0; i < 2; i++)
+        {
+            AddNewBlock();
+        }
+
     }
 
 
@@ -92,17 +97,14 @@ public class LevelGenerator : MonoBehaviour
     //Método para generar los bloques iniciales (generar hasta dos bloques)
     public void GenerateInitialBlocks()
     {
+        isGeneratingInitialBlocks = true;
         for (int i = 0; i < 3; i++)
         {
             AddNewBlock();
         }
+        isGeneratingInitialBlocks = false;
     }
 
-   
-    
-    
-    
-    
     //Método para eliminar los bloques antiguos de la escena (por los que ya ha pasado el personaje)
     public void RemoveOldBlock()
     {

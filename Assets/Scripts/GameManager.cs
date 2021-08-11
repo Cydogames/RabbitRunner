@@ -5,21 +5,29 @@ using UnityEngine;
 //Crear una enumeración de los estados del juego disponibles
 public enum GameState { inMenu, inGameStarted, inGameOver, inGamePaused };
 
+
 //Clase que se encargará de manejar todos los estados del juego
 public class GameManager : MonoBehaviour
 {
-    public static GameManager sharedInstance;
-
     //Crear una variable pública de tipo GameState para usarla como estado del juego actual.
     public GameState currentGameState;
 
+    public static GameManager sharedInstance;
+
+    //UI con el canvas de cada estado de juego
+    public Canvas menuCanvas;
+    public Canvas gameOverCanvas;
+    public Canvas pauseCanvas;
+    public Canvas gameStartedCanvas;
+
+    //Variables para la puntuación del juego
+    public int carrotCounter = 0;
     //--------------------------------------------------//
 
-    private void Awake()
-    {
+    private void Awake() {
         sharedInstance = this;
+        
     }
-
 
     private void Start()
     {
@@ -30,38 +38,12 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        //Si el jugador pulsa la tecla S, el estado actual del juego pasará a estar en la pantalla de Juego.
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            /*Si el estado actual del juego no es el de la pantalla de juego, 
-                * coloca al personaje en su posición inicial, 
-                * genera los bloques iniciales 
-                * y cambia le estado del juego a "InGame"
-           */
-            if (currentGameState != GameState.inGameStarted)
-            {
-                PlayerController.sharedInstance.RestartPosition();
-                LevelGenerator.sharedInstance.GenerateInitialBlocks();
-                StartGame();
-            }
-        }
-
         //En el caso de que el jugador presiona la tecla de "ESC", se pausará la partida siempre y cuando el juego actual no esté en pausa ni haya terminado
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (currentGameState != GameState.inGamePaused && currentGameState != GameState.inGameOver)
+            if (currentGameState == GameState.inGameStarted)
             {
                 PauseGame();
-            }
-        }
-
-        //En el caso de que el jugador presione la tecla "K", matará al personaje y el estado de la partida cambiará a GameOver, siempre y cuando no se encuentre en ese estado.
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (currentGameState != GameState.inGameOver)
-            {
-               
-                GameOver();
             }
         }
     }
@@ -70,9 +52,15 @@ public class GameManager : MonoBehaviour
     //Método para cambiar el estado del juego en "comenzar el juego".
     public void StartGame()
     {
-        
+        carrotCounter = 0;
+        FakeBlock.sharedInstance.fakeBlock.SetActive(true);
         ChangeState(GameState.inGameStarted);
-       
+        
+        ViewInGame.sharedInstance.UpdateCarrotsLabel();
+        ViewInGame.sharedInstance.UpdateMaxDistanceLabel();
+        
+
+
     }
 
     //Método para cambiar el estado del juego en "juego terminado".
@@ -80,8 +68,9 @@ public class GameManager : MonoBehaviour
     {
         LevelGenerator.sharedInstance.RemoveAllBlocks();
         ChangeState(GameState.inGameOver);
-      
         
+        ViewInGameOver.sharedInstance.UpdateDistanceLabel();
+        ViewInGameOver.sharedInstance.UpdateCarrotsLabel();
     }
 
     //Método para cambiar el estado del juego en "juego pausado".
@@ -94,6 +83,13 @@ public class GameManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         ChangeState(GameState.inMenu);
+        LevelGenerator.sharedInstance.RemoveAllBlocks();
+        PlayerController.sharedInstance.myAnimator.SetBool("isAlive", true);
+        PlayerController.sharedInstance.RestartPosition();
+        FakeBlock.sharedInstance.fakeBlock.SetActive(true);
+       
+
+
     }
 
     //Método que cambia el estado del juego.
@@ -103,20 +99,65 @@ public class GameManager : MonoBehaviour
         if (newGameState == GameState.inGameStarted)
         {
             currentGameState = newGameState;
+
+            menuCanvas.enabled = false;
+            gameOverCanvas.enabled = false;
+            pauseCanvas.enabled = false;
+            gameStartedCanvas.enabled = true;
+
+            gameStartedCanvas.gameObject.SetActive(true);
+            
+
         }
         else if (newGameState == GameState.inGameOver)
         {
             currentGameState = newGameState;
+
+            menuCanvas.enabled = false;
+            gameStartedCanvas.enabled = false;
+            pauseCanvas.enabled = false;
+            gameOverCanvas.enabled = true;
+
+            gameOverCanvas.gameObject.SetActive(true);
+           
         }
         else if (newGameState == GameState.inGamePaused)
         {
             currentGameState = newGameState;
+
+            menuCanvas.enabled = false;
+            gameStartedCanvas.enabled = true;
+            pauseCanvas.enabled = true;
+
+            pauseCanvas.gameObject.SetActive(true);
+            
         }
         else if (newGameState == GameState.inMenu)
         {
             currentGameState = newGameState;
+
+            gameOverCanvas.enabled = false;
+            pauseCanvas.enabled = false;
+            gameStartedCanvas.enabled = false;
+            menuCanvas.enabled = true;
+
+            
+
+
         }
 
     }
+
+    public void CountCarrots()
+    {
+        carrotCounter++;
+        ViewInGame.sharedInstance.UpdateCarrotsLabel();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    
 }
 
