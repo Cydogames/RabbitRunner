@@ -19,8 +19,6 @@ public class LevelGenerator : MonoBehaviour
     //Punto inicial donde empezará a crearse el primer nivel de todos
     public Transform levelInitialPoint;
 
-    private bool isGeneratingInitialBlocks = false;
-
     //----------------------METODOS DE UNITY---------------------------//
 
 
@@ -97,12 +95,12 @@ public class LevelGenerator : MonoBehaviour
     //Método para generar los bloques iniciales (generar hasta dos bloques)
     public void GenerateInitialBlocks()
     {
-        isGeneratingInitialBlocks = true;
+ 
         for (int i = 0; i < 3; i++)
         {
             AddNewBlock();
         }
-        isGeneratingInitialBlocks = false;
+
     }
 
     //Método para eliminar los bloques antiguos de la escena (por los que ya ha pasado el personaje)

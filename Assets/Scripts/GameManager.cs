@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         sharedInstance = this;
+        Application.targetFrameRate = 60;
+        
         
     }
 
